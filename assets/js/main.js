@@ -21,6 +21,7 @@ const CMS = {
     comoFunciona: { label: 'El proceso', title: 'El proceso es simple', subtitle: 'En 4 pasos tenés tu canción profesional.' },
     ejemplos: { label: 'Ejemplos reales', title: 'Canciones que ya hicimos realidad', subtitle: 'Mirá lo que otros pidieron y recibieron.' },
     testimonios: { label: 'Testimonios', title: 'Lo que dicen nuestros clientes', subtitle: '+2400 personas ya convirtieron sus ideas en canciones.' },
+    servicios: { label: 'Servicios incluidos', title: 'Todo lo que necesitás', subtitle: 'De la idea al master final, nos encargamos de todo el proceso musical.' },
     cta: { title: '¿Tenés una idea y querés convertirla en canción?', subtitle: 'Completá el formulario y recibí 3 ofertas de compositores listos para darle vida a tu proyecto musical.' },
     tienda: { label: 'Catálogo', title: 'Encontrá tu sonido', subtitle: 'Explorá nuestros estilos y elegí el que más te guste.' },
     gallery: [
@@ -37,6 +38,12 @@ const CMS = {
       { name: 'Alex Torres', genre: 'Pop / Balada', price: 120, delivery: '36 horas', initials: 'AT', color: 'av1', rank: '#1' },
       { name: 'María Cuervo', genre: 'Rock / Electrónica', price: 95, delivery: '48 horas', initials: 'MC', color: 'av2', rank: '#2' },
       { name: 'Santi Paz', genre: 'Reggaetón / Trap', price: 150, delivery: '24 horas', initials: 'SP', color: 'av3', rank: '#3' }
+    ],
+    services: [
+      { icon: 'fa-music', title: 'Composición', desc: 'Creamos la música y letra original desde cero, adaptada a tu historia y al género que elijas.' },
+      { icon: 'fa-microphone', title: 'Producción', desc: 'Grabación, mezcla y masterización profesional. Sonido listo para plataformas digitales.' },
+      { icon: 'fa-sliders-h', title: 'Arreglos', desc: 'Instrumentación personalizada: piano, cuerdas, sintetizadores, percusión y más.' },
+      { icon: 'fa-hourglass-half', title: 'Entrega rápida', desc: 'Tu canción completa en menos de 24 horas. Sin perder calidad ni atención al detalle.' }
     ],
     storeItems: [
       { icon: 'fa-crown', title: 'Balada Romántica', desc: 'Tema suave con piano y cuerdas. Ideal para declaraciones, aniversarios o momentos especiales.', price: 89, color: '#f6b83e' },
@@ -114,6 +121,7 @@ function applySectionText() {
   setSectionText('como-funciona', content.comoFunciona);
   setSectionText('ejemplos', content.ejemplos);
   setSectionText('testimonios', content.testimonios);
+  setSectionText('servicios', content.servicios);
   setSectionText('tienda', content.tienda);
   const ctaTitle = document.querySelector('#cta-final .cta-box h2');
   if (ctaTitle) ctaTitle.textContent = content.cta.title;
@@ -153,6 +161,18 @@ function renderContent() {
           <div class="avatar-sm">${t.initials}</div>
           <div class="info"><h5>${t.name}</h5><p>${t.role}</p></div>
         </div>
+      </div>
+    `).join('');
+  }
+
+  // Services
+  const serviceGrid = document.querySelector('.service-grid');
+  if (serviceGrid) {
+    serviceGrid.innerHTML = content.services.map(s => `
+      <div class="service-card reveal">
+        <div class="service-icon"><i class="fas ${s.icon}"></i></div>
+        <h4>${s.title}</h4>
+        <p>${s.desc}</p>
       </div>
     `).join('');
   }
