@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Music Express — Tu canción en 24hs</title>
+  <meta name="description" content="Pedí tu canción personalizada. Recibe 3 ofertas de compositores reales en menos de 24 horas. Letra, música y arreglos profesionales." />
+  <meta property="og:title" content="Music Express — Tu canción personalizada en 3 pasos" />
+  <meta property="og:description" content="Recibe 3 ofertas de músicos reales para tu canción. Letra, música y arreglos profesionales." />
+  <meta property="og:image" content="assets/images/og-image.jpg" />
+  <meta property="og:type" content="website" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=2" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎵</text></svg>" />
+
+  <!-- Firebase Import Map -->
+  <script type="importmap">
+  {
+    "imports": {
+      "firebase/app": "/node_modules/firebase/app/dist/esm/index.esm.js",
+      "firebase/analytics": "/node_modules/firebase/analytics/dist/esm/index.esm.js"
+    }
+  }
+  </script>
+</head>
+<body>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-menu-close" onclick="toggleMobile()"><i class="fas fa-times"></i></button>
+    <a href="#" onclick="navigateTo('inicio');toggleMobile()">Inicio</a>
+    <a href="#" onclick="navigateTo('como-funciona');toggleMobile()">Cómo funciona</a>
+    <a href="#" onclick="navigateTo('tienda');toggleMobile()">Catálogo</a>
+    <a href="#" onclick="navigateTo('ejemplos');toggleMobile()">Ejemplos</a>
+    <a href="#" onclick="navigateTo('pedido');toggleMobile()">Pedir tema</a>
+  </div>
+
+  <!-- ADMIN TOOLBAR -->
+  <div class="admin-toolbar" id="adminToolbar">
+    <span><i class="fas fa-shield-alt"></i> Modo Administrador</span>
+    <button class="btn" onclick="openCmsPanel()"><i class="fas fa-pen"></i> Editar contenidos</button>
+    <button class="btn" onclick="resetContent()"><i class="fas fa-undo"></i> Restaurar valores</button>
+    <button class="btn" onclick="adminLogout()"><i class="fas fa-sign-out-alt"></i> Salir</button>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar-inner">
+      <a href="#" onclick="navigateTo('inicio');return false;" class="logo">
+        <div class="logo-glow">
+          <img src="logo/logo.png" alt="Music Express" class="logo-img" />
+        </div>
+        <span data-cms="siteName">Music Express</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#" onclick="navigateTo('inicio');return false;" class="nav-active">Inicio</a></li>
+        <li><a href="#" onclick="navigateTo('como-funciona');return false;">Cómo funciona</a></li>
+        <li><a href="#" onclick="navigateTo('tienda');return false;">Catálogo</a></li>
+        <li><a href="#" onclick="navigateTo('ejemplos');return false;">Ejemplos</a></li>
+        <li>
+          <button class="nav-cart" onclick="toggleCart()" aria-label="Carrito">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-badge" id="cartBadge">0</span>
+          </button>
+        </li>
+        <li><a href="#" onclick="navigateTo('pedido');return false;" class="btn btn-primary btn-sm" style="text-decoration:none;color:#0a0a0a;"><i class="fas fa-music"></i> Pedir tema</a></li>
+      </ul>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="nav-cart" onclick="toggleCart()" aria-label="Carrito" style="display:none;" class="nav-cart-mobile">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-badge" id="cartBadgeMobile">0</span>
+        </button>
+        <button class="nav-toggle" onclick="toggleMobile()" aria-label="Menú"><i class="fas fa-bars"></i></button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CART SIDEBAR -->
+  <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+  <div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+      <h3><i class="fas fa-shopping-cart"></i> Tu carrito</h3>
+      <button class="cart-close-btn" onclick="toggleCart()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <div class="cart-empty">
+        <i class="fas fa-shopping-cart"></i>
+        <p>Tu carrito está vacío</p>
+      </div>
+    </div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Total</span>
+        <span id="cartTotal">$0 USD</span>
+      </div>
+      <button class="btn btn-primary" onclick="checkoutCart()"><i class="fas fa-lock"></i> Proceder al pago</button>
+    </div>
+  </div>
+
+  <!-- LANDING HERO -->
+  <section class="landing-hero page-view active" id="inicio" data-view="inicio">
+    <!-- Rotating backgrounds -->
+    <div class="landing-slides" id="landingSlides">
+      <div class="landing-slide" data-index="0">
+        <div class="slide-img" style="background-image:url('https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=1600&q=80')"></div>
+        <div class="slide-gradient"></div>
+        <svg class="slide-svg" viewBox="0 0 400 600" preserveAspectRatio="xMidYMid meet">
+          <ellipse cx="200" cy="140" rx="40" ry="45" fill="currentColor"/>
+          <rect x="170" y="190" width="60" height="120" rx="8" fill="currentColor"/>
+          <rect x="140" y="210" width="30" height="10" rx="4" fill="currentColor" transform="rotate(-40 155 215)"/>
+          <rect x="230" y="200" width="30" height="10" rx="4" fill="currentColor" transform="rotate(30 245 205)"/>
+          <rect x="155" y="220" width="80" height="14" rx="3" fill="currentColor" transform="rotate(25 195 227)"/>
+          <rect x="220" y="315" width="10" height="80" fill="currentColor"/>
+          <rect x="165" y="315" width="10" height="80" fill="currentColor"/>
+          <circle cx="200" cy="225" r="8" fill="currentColor"/>
+          <circle cx="215" cy="225" r="8" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="landing-slide" data-index="1">
+        <div class="slide-img" style="background-image:url('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1600&q=80')"></div>
+        <div class="slide-gradient"></div>
+        <svg class="slide-svg" viewBox="0 0 400 600" preserveAspectRatio="xMidYMid meet">
+          <ellipse cx="200" cy="130" rx="35" ry="42" fill="currentColor"/>
+          <rect x="175" y="178" width="50" height="130" rx="6" fill="currentColor"/>
+          <rect x="130" y="200" width="55" height="10" rx="4" fill="currentColor" transform="rotate(-50 157 205)"/>
+          <rect x="215" y="195" width="55" height="10" rx="4" fill="currentColor" transform="rotate(45 242 200)"/>
+          <rect x="150" y="195" width="8" height="70" fill="currentColor" transform="rotate(-50 154 230)"/>
+          <rect x="245" y="190" width="8" height="70" fill="currentColor" transform="rotate(45 249 225)"/>
+          <rect x="220" y="315" width="10" height="80" fill="currentColor"/>
+          <rect x="165" y="315" width="10" height="80" fill="currentColor"/>
+          <rect x="192" y="190" width="16" height="16" rx="8" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="landing-slide" data-index="2">
+        <div class="slide-img" style="background-image:url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1600&q=80')"></div>
+        <div class="slide-gradient"></div>
+        <svg class="slide-svg" viewBox="0 0 400 600" preserveAspectRatio="xMidYMid meet">
+          <ellipse cx="200" cy="120" rx="38" ry="44" fill="currentColor"/>
+          <rect x="172" y="170" width="56" height="110" rx="7" fill="currentColor"/>
+          <rect x="140" y="190" width="40" height="10" rx="4" fill="currentColor" transform="rotate(-35 160 195)"/>
+          <rect x="220" y="185" width="40" height="10" rx="4" fill="currentColor" transform="rotate(35 240 190)"/>
+          <rect x="175" y="222" width="50" height="60" rx="5" fill="currentColor"/>
+          <rect x="220" y="285" width="10" height="90" fill="currentColor"/>
+          <rect x="165" y="285" width="10" height="90" fill="currentColor"/>
+          <circle cx="188" cy="230" r="6" fill="currentColor"/>
+          <circle cx="212" cy="230" r="6" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="landing-slide" data-index="3">
+        <div class="slide-img" style="background-image:url('https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=1600&q=80')"></div>
+        <div class="slide-gradient"></div>
+        <svg class="slide-svg" viewBox="0 0 400 600" preserveAspectRatio="xMidYMid meet">
+          <ellipse cx="200" cy="135" rx="36" ry="43" fill="currentColor"/>
+          <rect x="172" y="184" width="56" height="115" rx="7" fill="currentColor"/>
+          <rect x="138" y="205" width="45" height="10" rx="4" fill="currentColor" transform="rotate(-45 160 210)"/>
+          <rect x="218" y="200" width="45" height="10" rx="4" fill="currentColor" transform="rotate(45 240 205)"/>
+          <rect x="225" y="305" width="10" height="80" fill="currentColor"/>
+          <rect x="160" y="305" width="10" height="80" fill="currentColor"/>
+          <circle cx="188" cy="190" r="10" fill="currentColor"/>
+          <circle cx="212" cy="190" r="10" fill="currentColor"/>
+          <rect x="180" y="200" width="40" height="12" rx="4" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="landing-slide" data-index="4">
+        <div class="slide-img" style="background-image:url('https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=1600&q=80')"></div>
+        <div class="slide-gradient"></div>
+        <svg class="slide-svg" viewBox="0 0 400 600" preserveAspectRatio="xMidYMid meet">
+          <ellipse cx="200" cy="125" rx="37" ry="43" fill="currentColor"/>
+          <rect x="168" y="174" width="64" height="100" rx="7" fill="currentColor"/>
+          <rect x="120" y="195" width="55" height="10" rx="4" fill="currentColor" transform="rotate(-55 147 200)"/>
+          <rect x="225" y="190" width="55" height="10" rx="4" fill="currentColor" transform="rotate(55 252 195)"/>
+          <rect x="168" y="200" width="20" height="40" rx="4" fill="currentColor"/>
+          <rect x="212" y="200" width="20" height="40" rx="4" fill="currentColor"/>
+          <rect x="225" y="280" width="10" height="90" fill="currentColor"/>
+          <rect x="160" y="280" width="10" height="90" fill="currentColor"/>
+          <rect x="182" y="195" width="36" height="8" rx="3" fill="currentColor"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Slide indicators -->
+    <div class="landing-indicators" id="landingIndicators">
+      <span class="indicator active"></span>
+      <span class="indicator"></span>
+      <span class="indicator"></span>
+      <span class="indicator"></span>
+      <span class="indicator"></span>
+    </div>
+
+    <!-- Foreground content -->
+    <div class="landing-content">
+      <div class="container">
+        <div class="landing-badge" data-cms="hero.badge">
+          <i class="fas fa-bolt"></i> Compositores reales · Entrega rápida <i class="fas fa-hourglass-half"></i>
+        </div>
+        <h1 class="landing-title" data-cms="hero.title">
+          Tu canción personalizada <span class="highlight">en 3 pasos.</span>
+        </h1>
+        <p class="landing-sub" data-cms="hero.subtitle">Dinos qué querés y elegí al compositor que dará vida a tu idea. Letra, música y arreglos profesionales en menos de 24 horas.</p>
+
+        <!-- Service summary cards -->
+        <div class="service-grid">
+          <div class="service-card">
+            <div class="service-icon"><i class="fas fa-pen-fancy"></i></div>
+            <h4>Composición</h4>
+            <p>Letras originales creadas por compositores profesionales según tu idea.</p>
+          </div>
+          <div class="service-card">
+            <div class="service-icon"><i class="fas fa-microphone-alt"></i></div>
+            <h4>Producción</h4>
+            <p>Grabación, mezcla y mastering con calidad estudio profesional.</p>
+          </div>
+          <div class="service-card">
+            <div class="service-icon"><i class="fas fa-music"></i></div>
+            <h4>Arreglos</h4>
+            <p>Instrumentales completos con músicos reales, no pistas genéricas.</p>
+          </div>
+          <div class="service-card">
+            <div class="service-icon"><i class="fas fa-rocket"></i>
+            </div>
+            <h4>Entrega rápida</h4>
+            <p>Recibí tu tema en 24-48 horas. Listo para Spotify, YouTube y más.</p>
+          </div>
+        </div>
+
+        <div class="landing-actions">
+          <a href="#" onclick="navigateTo('pedido');return false;" class="btn btn-primary btn-lg"><i class="fas fa-music"></i> Pedir mi tema ahora</a>
+          <a href="#" onclick="navigateTo('como-funciona');return false;" class="btn btn-dark btn-lg"><i class="fas fa-play-circle"></i> Ver cómo funciona</a>
+        </div>
+
+        <div class="landing-stats">
+          <div class="landing-stat">
+            <h3 data-cms="hero.stat1">+2,400</h3>
+            <p data-cms="hero.stat1Label">canciones entregadas</p>
+          </div>
+          <div class="landing-stat">
+            <h3 data-cms="hero.stat2">4.9★</h3>
+            <p data-cms="hero.stat2Label">calificación promedio</p>
+          </div>
+          <div class="landing-stat">
+            <h3 data-cms="hero.stat3">24hs</h3>
+            <p data-cms="hero.stat3Label">tiempo récord</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PEDIDO / FORM -->
+  <section class="section page-view" id="pedido" data-view="pedido">
+    <div class="container">
+      <div class="form-wrapper">
+        <div class="section-header">
+          <span class="section-label" data-cms="pedido.label">Paso 1</span>
+          <h2 class="section-title" data-cms="pedido.title">Contanos tu idea</h2>
+          <p class="section-subtitle" data-cms="pedido.subtitle">Completá estos datos y en segundos recibirás 3 propuestas de compositores listos para trabajar.</p>
+        </div>
+        <form class="form-card" id="orderForm">
+          <div class="form-group">
+            <label for="titulo">Título de tu canción <span class="required">*</span></label>
+            <input type="text" id="titulo" placeholder="Ej: Te escribo esta noche" required />
+            <div class="hint">Puede ser un título tentativo, lo ajustarán con el compositor.</div>
+          </div>
+          <div class="form-group">
+            <label for="letra">¿Qué debe decir la letra? <span class="required">*</span></label>
+            <textarea id="letra" placeholder="Ej: algo agridulce, como extrañar pero estar bien. Quizás mencionar un atardecer y una promesa." required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="genero">Ritmo / Género musical <span class="required">*</span></label>
+            <select id="genero" required>
+              <option value="" disabled selected>Seleccioná un género</option>
+              <option value="pop">Pop</option>
+              <option value="reggaeton">Reggaetón</option>
+              <option value="trap">Trap / Hip Hop</option>
+              <option value="balada">Balada / Romántica</option>
+              <option value="rock">Rock</option>
+              <option value="cumbia">Cumbia</option>
+              <option value="electronica">Electrónica</option>
+              <option value="otro">Otro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Presupuesto estimado</label>
+            <div class="range-wrap">
+              <div class="range-header">
+                <span class="range-label">¿Cuánto querés invertir?</span>
+                <div class="range-value" id="rangeDisplay">$75 <span>USD</span></div>
+              </div>
+              <input type="range" id="budgetRange" min="30" max="300" value="75" step="5" />
+              <div class="range-labels"><span>$30</span><span>$300</span></div>
+            </div>
+          </div>
+          <div class="form-submit-wrap">
+            <button type="submit" class="btn btn-primary btn-full"><i class="fas fa-search"></i> Buscar compositores</button>
+            <div class="form-note"><i class="fas fa-shield-alt"></i> Sin compromiso — recibí ofertas antes de pagar</div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOADING OVERLAY -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+      <div class="loading-animation">
+        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+        <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+      </div>
+      <h3>Buscando compositores para tu idea</h3>
+      <p>Estamos notificando a los mejores músicos para tu proyecto<span class="loading-dots"></span></p>
+    </div>
+  </div>
+
+  <!-- RESULTADOS -->
+  <section class="section" id="resultados">
+    <div class="container">
+      <div class="results-header">
+        <div class="check-icon"><i class="fas fa-check"></i></div>
+        <span class="section-label">Ofertas recibidas</span>
+        <h2 class="section-title">3 compositores disponibles</h2>
+        <p class="section-subtitle">Estos 3 músicos ya están listos para trabajar tu idea. Elegí al que más te guste.</p>
+      </div>
+      <div class="results-grid" id="resultsGrid">
+        <div class="composer-card" data-index="0">
+          <div class="rank gold">#1</div>
+          <div class="composer-avatar av1">AT</div>
+          <h4 data-cms="composers.0.name">Alex Torres</h4>
+          <span class="genre-tag" data-cms="composers.0.genre">Pop / Balada</span>
+          <div class="audio-player-sim" onclick="togglePlay(this)">
+            <div class="play-btn"><i class="fas fa-play"></i></div>
+            <div class="audio-wave-group"></div>
+            <span class="duration">0:30</span>
+          </div>
+          <div class="composer-price" data-cms="composers.0.price">$120 <small>USD</small></div>
+          <div class="composer-delivery" data-cms="composers.0.delivery"><i class="fas fa-clock"></i> Entrega en 36 horas</div>
+          <button class="btn btn-primary btn-sm btn-full" onclick="addToCart(this)"><i class="fas fa-shopping-cart"></i> Añadir al carrito</button>
+        </div>
+        <div class="composer-card" data-index="1">
+          <div class="rank">#2</div>
+          <div class="composer-avatar av2">MC</div>
+          <h4 data-cms="composers.1.name">María Cuervo</h4>
+          <span class="genre-tag" data-cms="composers.1.genre">Rock / Electrónica</span>
+          <div class="audio-player-sim" onclick="togglePlay(this)">
+            <div class="play-btn"><i class="fas fa-play"></i></div>
+            <div class="audio-wave-group"></div>
+            <span class="duration">0:30</span>
+          </div>
+          <div class="composer-price" data-cms="composers.1.price">$95 <small>USD</small></div>
+          <div class="composer-delivery" data-cms="composers.1.delivery"><i class="fas fa-clock"></i> Entrega en 48 horas</div>
+          <button class="btn btn-primary btn-sm btn-full" onclick="addToCart(this)"><i class="fas fa-shopping-cart"></i> Añadir al carrito</button>
+        </div>
+        <div class="composer-card" data-index="2">
+          <div class="rank">#3</div>
+          <div class="composer-avatar av3">SP</div>
+          <h4 data-cms="composers.2.name">Santi Paz</h4>
+          <span class="genre-tag" data-cms="composers.2.genre">Reggaetón / Trap</span>
+          <div class="audio-player-sim" onclick="togglePlay(this)">
+            <div class="play-btn"><i class="fas fa-play"></i></div>
+            <div class="audio-wave-group"></div>
+            <span class="duration">0:30</span>
+          </div>
+          <div class="composer-price" data-cms="composers.2.price">$150 <small>USD</small></div>
+          <div class="composer-delivery" data-cms="composers.2.delivery"><i class="fas fa-clock"></i> Entrega en 24 horas</div>
+          <button class="btn btn-primary btn-sm btn-full" onclick="addToCart(this)"><i class="fas fa-shopping-cart"></i> Añadir al carrito</button>
+        </div>
+      </div>
+      <div class="results-footer-text"><i class="fas fa-shield-alt"></i> Tu pago está protegido — solo se libera al compositor cuando recibís la canción completa.</div>
+    </div>
+  </section>
+
+  <!-- CÓMO FUNCIONA -->
+  <section class="section page-view" id="como-funciona" data-view="como-funciona">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label" data-cms="comoFunciona.label">El proceso</span>
+        <h2 class="section-title" data-cms="comoFunciona.title">Así de fácil funciona</h2>
+        <p class="section-subtitle" data-cms="comoFunciona.subtitle">De la idea a tu canción terminada en 4 simples pasos.</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card reveal">
+          <div class="step-number">1</div>
+          <div class="step-icon"><i class="fas fa-pen-fancy"></i></div>
+          <h4>Contanos tu idea</h4>
+          <p>Completá el formulario con título, reseña de letra y ritmo. En menos de 2 minutos.</p>
+        </div>
+        <div class="step-card reveal">
+          <div class="step-number">2</div>
+          <div class="step-icon"><i class="fas fa-users"></i></div>
+          <h4>Recibí 3 ofertas</h4>
+          <p>Compositores reales revisan tu pedido y te envían su propuesta con precio, muestra y tiempos.</p>
+        </div>
+        <div class="step-card reveal">
+          <div class="step-number">3</div>
+          <div class="step-icon"><i class="fas fa-shopping-cart"></i></div>
+          <h4>Elegí y pagá</h4>
+          <p>Añadí al carrito al compositor que más te guste. Pagás seguro por tarjeta o transferencia.</p>
+        </div>
+        <div class="step-card reveal">
+          <div class="step-number">4</div>
+          <div class="step-icon"><i class="fas fa-headphones"></i></div>
+          <h4>Recibí tu canción</h4>
+          <p>Descargá tu tema en audio + letra escrita + arreglos profesional. Listo para Spotify.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIENDA / TEMAS DESTACADOS -->
+  <section class="section page-view" id="tienda" data-view="tienda">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label" data-cms="tienda.label">Catálogo</span>
+        <h2 class="section-title" data-cms="tienda.title">Temas destacados</h2>
+        <p class="section-subtitle" data-cms="tienda.subtitle">Escuchá samples de canciones que ya entregamos. Si te gusta el estilo, encargá uno similar.</p>
+      </div>
+      <div class="store-grid"></div>
+    </div>
+  </section>
+
+  <!-- EJEMPLOS -->
+  <section class="section page-view" id="ejemplos" data-view="ejemplos">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label" data-cms="ejemplos.label">Ejemplos reales</span>
+        <h2 class="section-title" data-cms="ejemplos.title">Pedidos que ya son canciones</h2>
+        <p class="section-subtitle" data-cms="ejemplos.subtitle">Mirá lo que otros pidieron y recibieron.</p>
+      </div>
+      <div class="gallery-grid"></div>
+
+      <div class="section-divider"></div>
+
+      <div id="testimonios">
+      <div class="section-header" style="margin-top:64px;">
+        <span class="section-label" data-cms="testimonios.label">Testimonios</span>
+        <h2 class="section-title" data-cms="testimonios.title">Lo que dicen nuestros clientes</h2>
+        <p class="section-subtitle" data-cms="testimonios.subtitle">+2400 personas ya convirtieron sus ideas en canciones.</p>
+      </div>
+      <div class="testimonials-grid"></div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <div id="cta-final">
+      <div class="cta-box reveal" style="margin-top:64px;">
+        <div class="cta-bg-shapes" style="position:absolute;inset:0;pointer-events:none;"><div class="shape"></div><div class="shape"></div></div>
+        <div style="position:relative;z-index:1;">
+          <h2 data-cms="cta.title">¿Tenés una idea y querés convertirla en canción?</h2>
+          <p data-cms="cta.subtitle">Completá el formulario y recibí 3 ofertas de compositores listos para darle vida a tu proyecto musical.</p>
+          <a href="#" onclick="navigateTo('pedido');return false;" class="btn btn-primary btn-lg"><i class="fas fa-music"></i> Empezar mi pedido ahora</a>
+        </div>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#" onclick="navigateTo('inicio');return false;" class="logo">
+            <div class="logo-glow">
+<img src="logo/logo.png" alt="Music Express" class="logo-img" />
+            </div>
+            Music Express
+          </a>
+          <p>El marketplace que conecta tus ideas musicales con compositores profesionales. Tu canción, más rápido que nunca. Danos tu idea, nosotros la convertimos en un HIT.</p>
+          <div class="footer-social">
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+            <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h5>Navegación</h5>
+          <ul>
+            <li><a href="#" onclick="navigateTo('como-funciona');return false;">Cómo funciona</a></li>
+            <li><a href="#" onclick="navigateTo('tienda');return false;">Catálogo</a></li>
+            <li><a href="#" onclick="navigateTo('ejemplos');return false;">Ejemplos</a></li>
+            <li><a href="#" onclick="navigateTo('pedido');return false;">Pedir tema</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Legal</h5>
+          <ul>
+            <li><a href="#">Términos y condiciones</a></li>
+            <li><a href="#">Política de privacidad</a></li>
+            <li><a href="#">Contacto</a></li>
+            <li><a href="#">FAQ</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Producto</h5>
+          <ul>
+            <li><a href="#" onclick="navigateTo('pedido');return false;">Solicitar tema</a></li>
+            <li><a href="#" onclick="navigateTo('tienda');return false;">Catálogo</a></li>
+            <li><a href="#" onclick="toggleCart()">Carrito</a></li>
+            <li><a href="#" onclick="openAdminLogin()">Administrar</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2025 Music Express. Todos los derechos reservados.</span>
+        <span>Hecho con <i class="fas fa-heart"></i> para músicos y creadores</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ADMIN LOGIN MODAL -->
+  <div class="admin-modal" id="adminModal">
+    <div class="admin-modal-backdrop" onclick="closeAdminLogin()"></div>
+    <div class="admin-modal-box">
+      <div class="lock-icon"><i class="fas fa-shield-alt"></i></div>
+      <h3>Acceso administrador</h3>
+      <p>Ingresá tus credenciales para gestionar el contenido de la página.</p>
+      <input type="text" id="adminUser" placeholder="Usuario" autocomplete="off" />
+      <input type="password" id="adminPass" placeholder="Contraseña" />
+      <button class="btn btn-primary" onclick="adminLogin()"><i class="fas fa-unlock"></i> Ingresar</button>
+      <div style="margin-top:12px;font-size:0.75rem;color:var(--text-muted);">Demo: admin / 123456</div>
+    </div>
+  </div>
+
+  <!-- ADMIN BADGE (floating) -->
+  <div class="admin-badge-container" id="adminBadgeContainer"></div>
+
+  <script type="module" src="assets/js/firebase-config.js"></script>
+  <script type="module" src="assets/js/main.js?v=2"></script>
+</body>
+</html>

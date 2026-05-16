@@ -1,0 +1,16 @@
+{
+  "name": "music-express",
+  "version": "1.0.0",
+  "description": "Music Express — Tu canción personalizada en 24hs",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "firebase": "^11.5.0"
+  }
+}
