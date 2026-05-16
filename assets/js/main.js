@@ -17,11 +17,11 @@ const CMS = {
       stat3: '24hs',   stat3Label: 'tiempo récord'
     },
     pedido: { label: 'Paso 1', title: 'Contanos tu idea', subtitle: 'Completá estos datos y en segundos recibirás 3 propuestas de compositores listos para trabajar.' },
-    comoFunciona: { label: 'El proceso', title: 'Así de fácil funciona', subtitle: 'De la idea a tu canción terminada en 4 simples pasos.' },
-    ejemplos: { label: 'Ejemplos reales', title: 'Pedidos que ya son canciones', subtitle: 'Mirá lo que otros pidieron y recibieron.' },
+    comoFunciona: { label: 'El proceso', title: 'El proceso es simple', subtitle: 'En 4 pasos tenés tu canción profesional.' },
+    ejemplos: { label: 'Ejemplos reales', title: 'Canciones que ya hicimos realidad', subtitle: 'Mirá lo que otros pidieron y recibieron.' },
     testimonios: { label: 'Testimonios', title: 'Lo que dicen nuestros clientes', subtitle: '+2400 personas ya convirtieron sus ideas en canciones.' },
     cta: { title: '¿Tenés una idea y querés convertirla en canción?', subtitle: 'Completá el formulario y recibí 3 ofertas de compositores listos para darle vida a tu proyecto musical.' },
-    tienda: { label: 'Catálogo', title: 'Temas destacados', subtitle: 'Escuchá samples de canciones que ya entregamos. Si te gusta el estilo, encargá uno similar.' },
+    tienda: { label: 'Catálogo', title: 'Encontrá tu sonido', subtitle: 'Explorá nuestros estilos y elegí el que más te guste.' },
     gallery: [
       { icon: 'birthday-cake', title: 'Pedido', text: '"Canción de cumpleaños para mi novia, ritmo balada, que hable de 5 años juntos."', result: 'Tema entregado en 2 días', stars: 5, author: 'Alex Torres', color: '#f6b83e' },
       { icon: 'heart', title: 'Pedido', text: '"Tema de desamor con esperanza. Que diga que estuvo bien pero hay que soltar."', result: 'Tema entregado en 36 horas', stars: 5, author: 'María Cuervo', color: '#ff6b35' },
