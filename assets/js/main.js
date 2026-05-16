@@ -109,36 +109,19 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ---------- RENDER CONTENT FROM CMS ----------
-function renderContent() {
-  // Hero
-  const heroBadge = document.querySelector('.hero-badge');
-  if (heroBadge) heroBadge.innerHTML = `<i class="fas fa-bolt"></i> ${content.hero.badge} <i class="fas fa-hourglass-half"></i>`;
-  const heroTitle = document.querySelector('.hero h1');
-  if (heroTitle) heroTitle.innerHTML = content.hero.title;
-  const heroSub = document.querySelector('.hero-content > p');
-  if (heroSub) heroSub.textContent = content.hero.subtitle;
-  const stats = $$('.hero-stat h3');
-  const statLabels = $$('.hero-stat p');
-  if (stats[0]) stats[0].textContent = content.hero.stat1;
-  if (stats[1]) stats[1].textContent = content.hero.stat2;
-  if (stats[2]) stats[2].textContent = content.hero.stat3;
-  if (statLabels[0]) statLabels[0].textContent = content.hero.stat1Label;
-  if (statLabels[1]) statLabels[1].textContent = content.hero.stat2Label;
-  if (statLabels[2]) statLabels[2].textContent = content.hero.stat3Label;
-
-  // Section headers
+function applySectionText() {
   setSectionText('pedido', content.pedido);
   setSectionText('como-funciona', content.comoFunciona);
   setSectionText('ejemplos', content.ejemplos);
   setSectionText('testimonios', content.testimonios);
   setSectionText('tienda', content.tienda);
-
-  // CTA
   const ctaTitle = document.querySelector('#cta-final .cta-box h2');
   if (ctaTitle) ctaTitle.textContent = content.cta.title;
   const ctaSub = document.querySelector('#cta-final .cta-box p');
   if (ctaSub) ctaSub.textContent = content.cta.subtitle;
+}
 
+function renderContent() {
   // Gallery
   const galleryGrid = document.querySelector('.gallery-grid');
   if (galleryGrid) {
@@ -608,6 +591,7 @@ window.saveCmsField = (path) => {
   document.querySelector('.cms-editor-modal')?.remove();
   // Re-render
   renderContent();
+  applySectionText();
   if (isAdmin) enableAdminMode();
   renderCart();
 };
@@ -678,6 +662,7 @@ window.saveCmsPanel = () => {
   CMS.save(content);
   document.querySelector('.cms-panel-modal')?.remove();
   renderContent();
+  applySectionText();
   if (isAdmin) enableAdminMode();
   renderCart();
   alert('✅ Todos los cambios guardados.');
@@ -688,6 +673,7 @@ window.resetContent = () => {
   localStorage.removeItem(CMS.key);
   content = CMS.clone(CMS.defaults);
   renderContent();
+  applySectionText();
   if (isAdmin) enableAdminMode();
   renderCart();
   document.querySelector('.cms-panel-modal')?.remove();
