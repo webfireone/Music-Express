@@ -5,24 +5,23 @@
 // ---------- Content Management System ----------
 const CMS = {
   key: 'musicExpressContent',
-  version: 2,
+  version: 3,
 
   defaults: {
     siteName: 'Music Express',
     hero: {
       badge: 'Compositores reales · Entrega rápida',
-      title: 'Tu canción personalizada <br/> <span class="highlight">en 3 pasos.</span><br/> Recibe 3 ofertas de músicos reales.',
+      title: 'Tu canción personalizada <span class="highlight">en 3 pasos.</span>',
       subtitle: 'Dinos qué querés y elegí al compositor que dará vida a tu idea. Letra, música y arreglos profesionales en menos de 24 horas.',
       stat1: '+2,400', stat1Label: 'canciones entregadas',
       stat2: '4.9★',   stat2Label: 'calificación promedio',
       stat3: '24hs',   stat3Label: 'tiempo récord'
     },
-    pedido: { label: 'Paso 1', title: 'Contanos tu idea', subtitle: 'Completá estos datos y en segundos recibirás 3 propuestas de compositores listos para trabajar.' },
+    pedido: { label: 'Paso 1', title: 'Contanos tu idea', subtitle: 'Contanos el título, la letra y el género que tenés en mente. En minutos recibís propuestas de compositores.' },
     comoFunciona: { label: 'El proceso', title: 'El proceso es simple', subtitle: 'En 4 pasos tenés tu canción profesional.' },
     ejemplos: { label: 'Ejemplos reales', title: 'Canciones que ya hicimos realidad', subtitle: 'Mirá lo que otros pidieron y recibieron.' },
     testimonios: { label: 'Testimonios', title: 'Lo que dicen nuestros clientes', subtitle: '+2400 personas ya convirtieron sus ideas en canciones.' },
-    servicios: { label: 'Servicios incluidos', title: 'Todo lo que necesitás', subtitle: 'De la idea al master final, nos encargamos de todo el proceso musical.' },
-    cta: { title: '¿Tenés una idea y querés convertirla en canción?', subtitle: 'Completá el formulario y recibí 3 ofertas de compositores listos para darle vida a tu proyecto musical.' },
+    servicios: { label: 'Servicios incluidos', title: 'Todo lo que necesitás', subtitle: 'Composición, producción y arreglos profesionales para que tu canción suene exactamente como la imaginaste.' },
     tienda: { label: 'Catálogo', title: 'Encontrá tu sonido', subtitle: 'Explorá nuestros estilos y elegí el que más te guste.' },
     gallery: [
       { icon: 'birthday-cake', title: 'Pedido', text: '"Canción de cumpleaños para mi novia, ritmo balada, que hable de 5 años juntos."', result: 'Tema entregado en 2 días', stars: 5, author: 'Alex Torres', color: '#f6b83e' },
@@ -123,10 +122,6 @@ function applySectionText() {
   setSectionText('testimonios', content.testimonios);
   setSectionText('servicios', content.servicios);
   setSectionText('tienda', content.tienda);
-  const ctaTitle = document.querySelector('#cta-final .cta-box h2');
-  if (ctaTitle) ctaTitle.textContent = content.cta.title;
-  const ctaSub = document.querySelector('#cta-final .cta-box p');
-  if (ctaSub) ctaSub.textContent = content.cta.subtitle;
 }
 
 function renderContent() {

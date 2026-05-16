@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  <link rel="stylesheet" href="assets/css/styles.css?v=4" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=5" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎵</text></svg>" />
 
   <script src="https://www.gstatic.com/firebasejs/11.10.0/firebase-app-compat.js"></script>
@@ -27,6 +27,7 @@
     <button class="mobile-menu-close" onclick="toggleMobile()"><i class="fas fa-times"></i></button>
     <a href="#" onclick="navigateTo('inicio');toggleMobile()">Inicio</a>
     <a href="#" onclick="navigateTo('como-funciona');toggleMobile()">Cómo funciona</a>
+    <a href="#" onclick="navigateTo('servicios');toggleMobile()">Servicios</a>
     <a href="#" onclick="navigateTo('tienda');toggleMobile()">Catálogo</a>
     <a href="#" onclick="navigateTo('ejemplos');toggleMobile()">Ejemplos</a>
     <a href="#" onclick="navigateTo('pedido');toggleMobile()">Pedir tema</a>
@@ -52,6 +53,7 @@
       <ul class="nav-links">
         <li><a href="#" onclick="navigateTo('inicio');return false;" class="nav-active">Inicio</a></li>
         <li><a href="#" onclick="navigateTo('como-funciona');return false;">Cómo funciona</a></li>
+        <li><a href="#" onclick="navigateTo('servicios');return false;">Servicios</a></li>
         <li><a href="#" onclick="navigateTo('tienda');return false;">Catálogo</a></li>
         <li><a href="#" onclick="navigateTo('ejemplos');return false;">Ejemplos</a></li>
         <li>
@@ -225,7 +227,7 @@
         <div class="section-header">
           <span class="section-label" data-cms="pedido.label">Paso 1</span>
           <h2 class="section-title" data-cms="pedido.title">Contanos tu idea</h2>
-          <p class="section-subtitle" data-cms="pedido.subtitle">Completá estos datos y en segundos recibirás 3 propuestas de compositores listos para trabajar.</p>
+          <p class="section-subtitle" data-cms="pedido.subtitle">Contanos el título, la letra y el género que tenés en mente. En minutos recibís propuestas de compositores.</p>
         </div>
         <form class="form-card" id="orderForm">
           <div class="form-group">
@@ -378,12 +380,12 @@
   </section>
 
   <!-- SERVICIOS -->
-  <section class="section" id="servicios">
+  <section class="section page-view" id="servicios" data-view="servicios">
     <div class="container">
       <div class="section-header">
         <span class="section-label" data-cms="servicios.label">Servicios incluidos</span>
         <h2 class="section-title" data-cms="servicios.title">Todo lo que necesitás</h2>
-        <p class="section-subtitle" data-cms="servicios.subtitle">De la idea al master final, nos encargamos de todo el proceso musical.</p>
+        <p class="section-subtitle" data-cms="servicios.subtitle">Composición, producción y arreglos profesionales para que tu canción suene exactamente como la imaginaste.</p>
       </div>
       <div class="service-grid"></div>
     </div>
@@ -422,18 +424,7 @@
       <div class="testimonials-grid"></div>
       </div>
 
-      <div class="section-divider"></div>
 
-      <div id="cta-final">
-      <div class="cta-box reveal" style="margin-top:64px;">
-        <div class="cta-bg-shapes" style="position:absolute;inset:0;pointer-events:none;"><div class="shape"></div><div class="shape"></div></div>
-        <div style="position:relative;z-index:1;">
-          <h2 data-cms="cta.title">¿Tenés una idea y querés convertirla en canción?</h2>
-          <p data-cms="cta.subtitle">Completá el formulario y recibí 3 ofertas de compositores listos para darle vida a tu proyecto musical.</p>
-          <a href="#" onclick="navigateTo('pedido');return false;" class="btn btn-primary btn-lg"><i class="fas fa-music"></i> Empezar mi pedido ahora</a>
-        </div>
-      </div>
-      </div>
     </div>
   </section>
 
@@ -460,6 +451,7 @@
           <h5>Navegación</h5>
           <ul>
             <li><a href="#" onclick="navigateTo('como-funciona');return false;">Cómo funciona</a></li>
+            <li><a href="#" onclick="navigateTo('servicios');return false;">Servicios</a></li>
             <li><a href="#" onclick="navigateTo('tienda');return false;">Catálogo</a></li>
             <li><a href="#" onclick="navigateTo('ejemplos');return false;">Ejemplos</a></li>
             <li><a href="#" onclick="navigateTo('pedido');return false;">Pedir tema</a></li>
@@ -509,6 +501,6 @@
   <div class="admin-badge-container" id="adminBadgeContainer"></div>
 
   <script src="assets/js/firebase-config.js"></script>
-  <script src="assets/js/main.js?v=4"></script>
+  <script src="assets/js/main.js?v=5"></script>
 </body>
 </html>
