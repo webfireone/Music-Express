@@ -104,6 +104,19 @@ const APP_VERSION = '2.0';
 document.addEventListener('DOMContentLoaded', () => {
   console.log(`Music Express v${APP_VERSION} - JS loaded`);
 
+  // Force clean any stale CMS data on fresh version
+  try {
+    const stored = localStorage.getItem('musicExpressContent');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (!parsed._version || parsed._version < 3) {
+        localStorage.removeItem('musicExpressContent');
+        console.log('Stale CMS data cleared');
+      }
+    }
+  } catch(e) { /* ignore */ }
+  content = CMS.load();
+
   renderContent();
   renderCart();
   initNavbar();
