@@ -1,0 +1,9 @@
+services:
+  - type: static
+    name: music-express
+    buildCommand: echo "ok"
+    staticPublishPath: .
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=0, must-revalidate
