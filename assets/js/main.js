@@ -5,6 +5,7 @@
 // ---------- Content Management System ----------
 const CMS = {
   key: 'musicExpressContent',
+  version: 2,
 
   defaults: {
     siteName: 'Music Express',
@@ -52,13 +53,16 @@ const CMS = {
       const stored = localStorage.getItem(this.key);
       if (stored) {
         const parsed = JSON.parse(stored);
-        return this.deepMerge(this.clone(this.defaults), parsed);
+        if (parsed._version === this.version) {
+          return this.deepMerge(this.clone(this.defaults), parsed);
+        }
       }
     } catch (e) { /* ignore */ }
     return this.clone(this.defaults);
   },
 
   save(data) {
+    data._version = this.version;
     localStorage.setItem(this.key, JSON.stringify(data));
   },
 
