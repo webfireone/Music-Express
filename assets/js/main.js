@@ -5,7 +5,7 @@
 // ---------- Content Management System ----------
 const CMS = {
   key: 'musicExpressContent',
-  version: 3,
+  version: 4,
 
   defaults: {
     siteName: 'Music Express',
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const stored = localStorage.getItem('musicExpressContent');
     if (stored) {
       const parsed = JSON.parse(stored);
-      if (!parsed._version || parsed._version < 3) {
+      if (!parsed._version || parsed._version < 4) {
         localStorage.removeItem('musicExpressContent');
         console.log('Stale CMS data cleared');
       }

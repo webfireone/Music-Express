@@ -222,10 +222,6 @@ body {
   display: block;
 }
 
-.page-view.active.landing-hero {
-  display: flex;
-}
-
 /* Nav active link */
 .nav-active {
   color: #fff !important;
@@ -444,12 +440,16 @@ body {
    ============================================= */
 .landing-hero {
   min-height: 100vh;
-  display: flex;
+  display: none;
   align-items: center;
   position: relative;
   overflow: hidden;
   padding: 120px 0 80px;
   background: #050505;
+}
+
+.page-view.active.landing-hero {
+  display: flex;
 }
 
 /* ---------- Slides ---------- */
@@ -666,6 +666,59 @@ body {
   font-size: 0.85rem;
   color: var(--text-muted);
   margin: 0;
+}
+
+/* =============================================
+   MINI HERO INLINE (per-section unique headers)
+   ============================================= */
+.mini-hero-inline {
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+  padding: 48px 0 32px;
+  border-bottom: 1px solid var(--border-color);
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.mini-hero-inline .mini-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(246, 184, 62, 0.1);
+  color: var(--accent-primary);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.mini-hero-inline .mini-hero-badge i {
+  font-size: 0.9rem;
+}
+
+.mini-hero-inline .mini-hero-title {
+  font-family: var(--font-heading);
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 12px;
+  line-height: 1.2;
+}
+
+.mini-hero-inline .mini-hero-title .highlight {
+  color: var(--accent-primary);
+}
+
+.mini-hero-inline .mini-hero-sub {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin: 0 auto 24px;
+  line-height: 1.6;
+}
+
+.mini-hero-inline .btn {
+  margin-top: 8px;
 }
 
 /* =============================================
