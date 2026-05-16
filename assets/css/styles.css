@@ -143,6 +143,11 @@ body {
   line-height: 1.6;
 }
 
+.section-cta {
+  text-align: center;
+  margin-top: 48px;
+}
+
 /* ---------- BUTTONS ---------- */
 .btn {
   display: inline-flex;

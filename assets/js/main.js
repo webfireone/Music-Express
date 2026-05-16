@@ -99,7 +99,10 @@ const $ = id => document.getElementById(id);
 const $$ = sel => document.querySelectorAll(sel);
 
 // ---------- INIT ----------
+const APP_VERSION = '2.0';
+
 document.addEventListener('DOMContentLoaded', () => {
+  console.log(`Music Express v${APP_VERSION} - JS loaded`);
 
   renderContent();
   renderCart();
