@@ -1,6 +1,3 @@
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-
 const firebaseConfig = {
   apiKey: "AIzaSyDvZbwNYqTldait1YbJk3zHnJYkjO9Is9Y",
   authDomain: "music-express-aecc6.firebaseapp.com",
@@ -11,7 +8,5 @@ const firebaseConfig = {
   measurementId: "G-M89QWC4E2W"
 };
 
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
-export { app, analytics };
+firebase.initializeApp(firebaseConfig);
+firebase.analytics();
