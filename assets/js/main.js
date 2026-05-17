@@ -10,7 +10,7 @@ const CMS = {
   defaults: {
     siteName: 'Music Express',
     hero: {
-      badge: 'Compositores reales · Entrega rápida',
+      badge: 'Compositores reales · Entrega en 48hs',
       title: 'Tu canción personalizada <span class="highlight">en 3 pasos.</span>',
       subtitle: 'Decinos qué querés y el mejor compositor le dará vida a tu idea. Letra, música y arreglos profesionales en menos de 48 horas.',
       stat1: '+2,400', stat1Label: 'canciones entregadas',
@@ -42,7 +42,7 @@ const CMS = {
       { icon: 'fa-music', title: 'Composición', desc: 'Creamos la música y letra original desde cero, adaptada a tu historia y al género que elijas.' },
       { icon: 'fa-microphone', title: 'Producción', desc: 'Grabación, mezcla y masterización profesional. Sonido listo para plataformas digitales.' },
       { icon: 'fa-sliders-h', title: 'Arreglos', desc: 'Instrumentación personalizada: piano, cuerdas, sintetizadores, percusión y más.' },
-      { icon: 'fa-hourglass-half', title: 'Entrega rápida', desc: 'Tu canción completa en menos de 24 horas. Sin perder calidad ni atención al detalle.' }
+      { icon: 'fa-hourglass-half', title: 'Entrega rápida', desc: 'Tu canción completa en menos de 48 horas. Sin perder calidad ni atención al detalle.' }
     ],
     storeItems: [
       { icon: 'fa-crown', title: 'Balada Romántica', desc: 'Tema suave con piano y cuerdas. Ideal para declaraciones, aniversarios o momentos especiales.', price: 89, color: '#f6b83e' },
