@@ -338,7 +338,7 @@ const WHATSAPP_NUMBER = '5491141751031';
 
 async function submitOrder(orderData) {
   try {
-    const db = firebase.firestore();
+    const db = window.db;
     const docRef = await db.collection('pedidos').add({
       ...orderData,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -402,7 +402,8 @@ function initForm() {
       alert('✅ ¡Pedido enviado con éxito!\n\nTe contactaremos pronto. Revisa tu WhatsApp.');
       form.reset();
     } catch (error) {
-      alert('Error al enviar el pedido. Por favor intentá de nuevo.');
+      console.error('Error completo:', error);
+      alert('Error al enviar el pedido: ' + error.message + '\n\nPor favor intentá de nuevo.');
     } finally {
       submitBtn.innerHTML = originalBtnText;
       submitBtn.disabled = false;
@@ -626,7 +627,7 @@ window.openPedidosPanel = async () => {
   list.innerHTML = '<p style="text-align:center;color:var(--text-muted);">Cargando pedidos...</p>';
 
   try {
-    const db = firebase.firestore();
+    const db = window.db;
     const snapshot = await db.collection('pedidos').orderBy('createdAt', 'desc').get();
 
     if (snapshot.empty) {
