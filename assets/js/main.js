@@ -12,7 +12,7 @@ const CMS = {
     hero: {
       badge: 'Compositores reales · Entrega rápida',
       title: 'Tu canción personalizada <span class="highlight">en 3 pasos.</span>',
-      subtitle: 'Dinos qué querés y elegí al compositor que dará vida a tu idea. Letra, música y arreglos profesionales en menos de 24 horas.',
+      subtitle: 'Decinos qué querés y el mejor compositor le dará vida a tu idea. Letra, música y arreglos profesionales en menos de 48 horas.',
       stat1: '+2,400', stat1Label: 'canciones entregadas',
       stat2: '4.9★',   stat2Label: 'calificación promedio',
       stat3: '24hs',   stat3Label: 'tiempo récord'
