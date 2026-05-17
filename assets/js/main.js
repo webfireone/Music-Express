@@ -121,7 +121,6 @@ document.addEventListener('DOMContentLoaded', () => {
   renderCart();
   initNavbar();
   initSlides();
-  initRange();
   initReveal();
   initWaveBars();
   initForm();
@@ -299,14 +298,13 @@ function initNavbar() {
   };
 }
 
-// ---------- RANGE ----------
-function initRange() {
-  const budgetRange = document.getElementById('budgetRange');
-  const rangeDisplay = document.getElementById('rangeDisplay');
-  if (!budgetRange || !rangeDisplay) return;
-  const update = (val) => { rangeDisplay.innerHTML = `$${val} <span>USD</span>`; };
-  budgetRange.addEventListener('input', (e) => update(e.target.value));
-  update(budgetRange.value);
+// ---------- OTRO GÉNERO ----------
+function toggleOtroGenero() {
+  const genero = document.getElementById('genero');
+  const otroGroup = document.getElementById('otroGeneroGroup');
+  if (genero && otroGroup) {
+    otroGroup.style.display = genero.value === 'otro' ? 'block' : 'none';
+  }
 }
 
 // ---------- REVEAL ----------
@@ -336,36 +334,79 @@ function initWaveBars() {
 }
 
 // ---------- FORM ----------
+const WHATSAPP_NUMBER = '5491141751031';
+
+async function submitOrder(orderData) {
+  try {
+    const db = firebase.firestore();
+    const docRef = await db.collection('pedidos').add({
+      ...orderData,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      status: 'nuevo'
+    });
+    console.log('Pedido guardado con ID:', docRef.id);
+    return docRef.id;
+  } catch (error) {
+    console.error('Error guardando pedido:', error);
+    throw error;
+  }
+}
+
+async function sendWhatsAppNotification(orderData) {
+  const mensaje = `*NUEVO PEDIDO - Music Express*\n\n` +
+    `📝 *Título:* ${orderData.titulo || 'Sin título'}\n\n` +
+    `🎵 *Género:* ${orderData.genero === 'otro' ? orderData.otroGenero : orderData.generoLabel}\n\n` +
+    `✍️ *Letra:* ${orderData.letra.substring(0, 500)}${orderData.letra.length > 500 ? '...' : ''}\n\n` +
+    `📅 Fecha: ${new Date().toLocaleString('es-AR')}`;
+
+  const url = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(mensaje)}`;
+
+  window.open(url, '_blank');
+}
+
 function initForm() {
   const form = document.getElementById('orderForm');
   if (!form) return;
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const titulo = document.getElementById('titulo').value.trim();
     const letra = document.getElementById('letra').value.trim();
     const genero = document.getElementById('genero').value;
-    if (!titulo || !letra || !genero) {
-      alert('Completá todos los campos obligatorios.');
+    const generoSelect = document.getElementById('genero');
+    const generoLabel = generoSelect.options[generoSelect.selectedIndex].text;
+    const otroGenero = document.getElementById('otroGenero').value.trim();
+
+    if (!letra || !genero) {
+      alert('Completá los campos obligatorios: letra y género.');
       return;
     }
+
+    const orderData = {
+      titulo: titulo || '',
+      letra,
+      genero,
+      generoLabel: genero === 'otro' ? otroGenero : generoLabel,
+      otroGenero: genero === 'otro' ? otroGenero : ''
+    };
+
     const overlay = document.getElementById('loadingOverlay');
-    overlay.classList.add('active');
-    setTimeout(() => {
-      overlay.classList.remove('active');
-      const section = document.getElementById('resultados');
-      section.classList.add('active');
-      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      const cards = document.querySelectorAll('.composer-card');
-      cards.forEach((card, i) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(30px)';
-        setTimeout(() => {
-          card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-          card.style.opacity = '1';
-          card.style.transform = 'translateY(0)';
-        }, 150 * i);
-      });
-    }, 2500);
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+    submitBtn.disabled = true;
+
+    try {
+      await submitOrder(orderData);
+      await sendWhatsAppNotification(orderData);
+
+      alert('✅ ¡Pedido enviado con éxito!\n\nTe contactaremos pronto. Revisa tu WhatsApp.');
+      form.reset();
+    } catch (error) {
+      alert('Error al enviar el pedido. Por favor intentá de nuevo.');
+    } finally {
+      submitBtn.innerHTML = originalBtnText;
+      submitBtn.disabled = false;
+    }
   });
 }
 
@@ -576,6 +617,60 @@ function renderAdminBadge() {
     ? `<span class="admin-badge active" onclick="window.adminLogout()"><i class="fas fa-shield-alt"></i> Admin</span>`
     : `<span class="admin-badge" onclick="window.openAdminLogin()"><i class="fas fa-lock"></i> Admin</span>`;
 }
+
+// ---------- PEDIDOS PANEL ----------
+window.openPedidosPanel = async () => {
+  const panel = document.getElementById('pedidosPanel');
+  const list = document.getElementById('pedidosList');
+  panel.style.display = 'flex';
+  list.innerHTML = '<p style="text-align:center;color:var(--text-muted);">Cargando pedidos...</p>';
+
+  try {
+    const db = firebase.firestore();
+    const snapshot = await db.collection('pedidos').orderBy('createdAt', 'desc').get();
+
+    if (snapshot.empty) {
+      list.innerHTML = '<div class="pedidos-empty"><i class="fas fa-inbox"></i><p>No hay pedidos todavía</p></div>';
+      return;
+    }
+
+    list.innerHTML = snapshot.docs.map(doc => {
+      const data = doc.id;
+      const d = doc.data();
+      const fecha = d.createdAt ? new Date(d.createdAt.seconds * 1000).toLocaleString('es-AR') : 'Sin fecha';
+      return `
+        <div class="pedido-card">
+          <div class="pedido-card-header">
+            <span class="pedido-id">#${doc.id.substring(0, 8)}</span>
+            <span class="pedido-status">${d.status || 'nuevo'}</span>
+          </div>
+          <div class="pedido-card-row">
+            <label>Título:</label>
+            <span>${d.titulo || 'Sin título'}</span>
+          </div>
+          <div class="pedido-card-row">
+            <label>Género:</label>
+            <span>${d.generoLabel || d.genero}</span>
+          </div>
+          <div class="pedido-card-row">
+            <label>Letra:</label>
+            <span>${d.letra.substring(0, 150)}${d.letra.length > 150 ? '...' : ''}</span>
+          </div>
+          <div class="pedido-fecha">
+            <i class="fas fa-clock"></i> ${fecha}
+          </div>
+        </div>
+      `;
+    }).join('');
+  } catch (error) {
+    console.error('Error cargando pedidos:', error);
+    list.innerHTML = '<p style="text-align:center;color:red;">Error al cargar pedidos</p>';
+  }
+};
+
+window.closePedidosPanel = () => {
+  document.getElementById('pedidosPanel').style.display = 'none';
+};
 
 function openCmsEditor(e) {
   const el = e.currentTarget;

@@ -14,11 +14,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  <link rel="stylesheet" href="assets/css/styles.css?v=10" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=11" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎵</text></svg>" />
 
   <script src="https://www.gstatic.com/firebasejs/11.10.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
@@ -36,9 +37,24 @@
   <!-- ADMIN TOOLBAR -->
   <div class="admin-toolbar" id="adminToolbar">
     <span><i class="fas fa-shield-alt"></i> Modo Administrador</span>
+    <button class="btn" onclick="openPedidosPanel()"><i class="fas fa-shopping-bag"></i> Pedidos</button>
     <button class="btn" onclick="openCmsPanel()"><i class="fas fa-pen"></i> Editar contenidos</button>
     <button class="btn" onclick="resetContent()"><i class="fas fa-undo"></i> Restaurar valores</button>
     <button class="btn" onclick="adminLogout()"><i class="fas fa-sign-out-alt"></i> Salir</button>
+  </div>
+
+  <!-- PEDIDOS PANEL -->
+  <div class="pedidos-panel" id="pedidosPanel" style="display:none;">
+    <div class="pedidos-panel-backdrop" onclick="closePedidosPanel()"></div>
+    <div class="pedidos-panel-content">
+      <div class="pedidos-panel-header">
+        <h3><i class="fas fa-shopping-bag"></i> Pedidos</h3>
+        <button onclick="closePedidosPanel()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="pedidos-panel-body" id="pedidosList">
+        <p>Cargando pedidos...</p>
+      </div>
+    </div>
   </div>
 
   <!-- NAVBAR -->
@@ -231,17 +247,18 @@
         </div>
         <form class="form-card" id="orderForm">
           <div class="form-group">
-            <label for="titulo">Título de tu canción <span class="required">*</span></label>
-            <input type="text" id="titulo" placeholder="Ej: Te escribo esta noche" required />
-            <div class="hint">Puede ser un título tentativo, lo ajustarán con el compositor.</div>
+            <label for="titulo">Título de tu canción</label>
+            <input type="text" id="titulo" placeholder="Ej: Te escribo esta noche" />
+            <div class="hint">Opcional — puede ser un título tentativo, lo ajustarán con el compositor.</div>
           </div>
           <div class="form-group">
             <label for="letra">¿Qué debe decir la letra? <span class="required">*</span></label>
             <textarea id="letra" placeholder="Ej: algo agridulce, como extrañar pero estar bien. Quizás mencionar un atardecer y una promesa." required></textarea>
+            <div class="hint" style="color: var(--accent-primary);"><i class="fas fa-info-circle"></i> Con esta información el compositor escribirá la letra de tu canción. Sé lo más detallado posible.</div>
           </div>
           <div class="form-group">
             <label for="genero">Ritmo / Género musical <span class="required">*</span></label>
-            <select id="genero" required>
+            <select id="genero" required onchange="toggleOtroGenero()">
               <option value="" disabled selected>Seleccioná un género</option>
               <option value="pop">Pop</option>
               <option value="reggaeton">Reggaetón</option>
@@ -253,20 +270,13 @@
               <option value="otro">Otro</option>
             </select>
           </div>
-          <div class="form-group">
-            <label>Presupuesto estimado</label>
-            <div class="range-wrap">
-              <div class="range-header">
-                <span class="range-label">¿Cuánto querés invertir?</span>
-                <div class="range-value" id="rangeDisplay">$75 <span>USD</span></div>
-              </div>
-              <input type="range" id="budgetRange" min="30" max="300" value="75" step="5" />
-              <div class="range-labels"><span>$30</span><span>$300</span></div>
-            </div>
+          <div class="form-group" id="otroGeneroGroup" style="display: none;">
+            <label for="otroGenero">¿Cuál es el ritmo o género?</label>
+            <input type="text" id="otroGenero" placeholder="Ej: Salsa, Merengue, Jazz, etc." />
           </div>
           <div class="form-submit-wrap">
-            <button type="submit" class="btn btn-primary btn-full"><i class="fas fa-search"></i> Buscar compositores</button>
-            <div class="form-note"><i class="fas fa-shield-alt"></i> Sin compromiso — recibí ofertas antes de pagar</div>
+            <button type="submit" class="btn btn-primary btn-full"><i class="fas fa-paper-plane"></i> Enviar pedido</button>
+            <div class="form-note"><i class="fas fa-shield-alt"></i> Tu pedido será enviado a作曲家 y te contactarán pronto.</div>
           </div>
         </form>
       </div>
@@ -536,6 +546,6 @@
   <div class="admin-badge-container" id="adminBadgeContainer"></div>
 
   <script src="assets/js/firebase-config.js"></script>
-  <script src="assets/js/main.js?v=8"></script>
+  <script src="assets/js/main.js?v=9"></script>
 </body>
 </html>
