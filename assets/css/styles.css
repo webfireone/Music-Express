@@ -276,7 +276,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 90px;
+  height: 120px;
   padding: 0;
 }
 
@@ -339,8 +339,8 @@ body {
 }
 
 .navbar-brand .logo-container .logo-img {
-  width: 80px;
-  height: 80px;
+  width: 160px;
+  height: 160px;
 }
 
 .navbar-brand .site-name {
