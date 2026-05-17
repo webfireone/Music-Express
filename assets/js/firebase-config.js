@@ -12,3 +12,5 @@ firebase.initializeApp(firebaseConfig);
 firebase.analytics();
 
 window.db = firebase.firestore();
+window.auth = firebase.auth();
+window.googleProvider = new firebase.auth.GoogleAuthProvider();

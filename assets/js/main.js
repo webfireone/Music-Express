@@ -100,6 +100,7 @@ const $$ = sel => document.querySelectorAll(sel);
 
 // ---------- INIT ----------
 const APP_VERSION = '2.0';
+let currentUser = null;
 
 document.addEventListener('DOMContentLoaded', () => {
   console.log(`Music Express v${APP_VERSION} - JS loaded`);
@@ -117,6 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
   } catch(e) { /* ignore */ }
   content = CMS.load();
 
+  initAuth();
   renderContent();
   renderCart();
   initNavbar();
@@ -339,8 +341,16 @@ const WHATSAPP_NUMBER = '5491141751031';
 async function submitOrder(orderData) {
   try {
     const db = window.db;
+    const userData = currentUser ? {
+      userId: currentUser.uid,
+      userName: currentUser.displayName || currentUser.email,
+      userEmail: currentUser.email,
+      userPhoto: currentUser.photoURL || null
+    } : null;
+
     const docRef = await db.collection('pedidos').add({
       ...orderData,
+      ...userData,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       status: 'nuevo'
     });
@@ -353,7 +363,8 @@ async function submitOrder(orderData) {
 }
 
 async function sendWhatsAppNotification(orderData) {
-  const mensaje = `*NUEVO PEDIDO - Music Express*\n\n` +
+  const userInfo = currentUser ? `\n👤 *Usuario:* ${currentUser.displayName || currentUser.email}` : '';
+  const mensaje = `*NUEVO PEDIDO - Music Express*${userInfo}\n\n` +
     `📝 *Título:* ${orderData.titulo || 'Sin título'}\n\n` +
     `🎵 *Género:* ${orderData.genero === 'otro' ? orderData.otroGenero : orderData.generoLabel}\n\n` +
     `✍️ *Letra:* ${orderData.letra.substring(0, 500)}${orderData.letra.length > 500 ? '...' : ''}\n\n` +
@@ -369,6 +380,14 @@ function initForm() {
   if (!form) return;
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    // Check if user is logged in
+    if (!currentUser) {
+      alert('Necesitás iniciar sesión para hacer un pedido.');
+      openAuthModal();
+      return;
+    }
+
     const titulo = document.getElementById('titulo').value.trim();
     const letra = document.getElementById('letra').value.trim();
     const genero = document.getElementById('genero').value;
@@ -805,4 +824,139 @@ window.resetContent = () => {
   renderCart();
   document.querySelector('.cms-panel-modal')?.remove();
   alert('✅ Contenido restaurado.');
+};
+
+// ---------- AUTH ----------
+function initAuth() {
+  window.auth.onAuthStateChanged((user) => {
+    currentUser = user;
+    updateAuthUI();
+  });
+}
+
+function updateAuthUI() {
+  const navbar = document.querySelector('.nav-links');
+  if (!navbar) return;
+
+  let authHTML = '';
+  
+  if (currentUser) {
+    authHTML = `
+      <li class="nav-user" style="margin-left:12px;display:flex;align-items:center;gap:8px;">
+        <img src="${currentUser.photoURL || 'https://www.gravatar.com/avatar?d=mp'}" style="width:32px;height:32px;border-radius:50%;" />
+        <span style="font-size:0.85rem;">${currentUser.displayName || currentUser.email}</span>
+        <button class="btn btn-sm" style="padding:4px 8px;font-size:0.75rem;" onclick="logout()">Salir</button>
+      </li>
+    `;
+  } else {
+    authHTML = `
+      <li><a href="#" onclick="openAuthModal();return false;" class="btn btn-primary btn-sm" style="text-decoration:none;color:#0a0a0a;margin-left:12px;"><i class="fas fa-user"></i> Iniciar sesión</a></li>
+    `;
+  }
+
+  const existingUser = navbar.querySelector('.nav-user');
+  const existingBtn = navbar.querySelector('.nav-login-btn');
+  if (existingUser) existingUser.remove();
+  if (existingBtn) existingBtn.remove();
+  
+  const cartLi = navbar.querySelector('.nav-cart')?.closest('li');
+  if (cartLi) {
+    cartLi.insertAdjacentHTML('afterend', authHTML);
+  }
+}
+
+window.openAuthModal = () => {
+  document.getElementById('authModal').classList.add('active');
+  showAuthLogin();
+};
+
+window.closeAuthModal = () => {
+  document.getElementById('authModal').classList.remove('active');
+  document.getElementById('authError').style.display = 'none';
+};
+
+window.showAuthRegister = () => {
+  document.getElementById('authLogin').style.display = 'none';
+  document.getElementById('authRegister').style.display = 'block';
+  document.getElementById('authError').style.display = 'none';
+};
+
+window.showAuthLogin = () => {
+  document.getElementById('authLogin').style.display = 'block';
+  document.getElementById('authRegister').style.display = 'none';
+  document.getElementById('authError').style.display = 'none';
+};
+
+function showAuthError(msg) {
+  const err = document.getElementById('authError');
+  err.textContent = msg;
+  err.style.display = 'block';
+}
+
+window.loginWithGoogle = async () => {
+  try {
+    await window.auth.signInWithPopup(window.googleProvider);
+    closeAuthModal();
+  } catch (error) {
+    showAuthError('Error con Google: ' + error.message);
+  }
+};
+
+window.loginWithEmail = async () => {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPass').value;
+
+  if (!email || !pass) {
+    showAuthError('Completá email y contraseña');
+    return;
+  }
+
+  try {
+    await window.auth.signInWithEmailAndPassword(email, pass);
+    closeAuthModal();
+  } catch (error) {
+    if (error.code === 'auth/user-not-found') {
+      showAuthError('No existe cuenta con este email');
+    } else if (error.code === 'auth/wrong-password') {
+      showAuthError('Contraseña incorrecta');
+    } else {
+      showAuthError('Error: ' + error.message);
+    }
+  }
+};
+
+window.registerWithEmail = async () => {
+  const name = document.getElementById('registerName').value.trim();
+  const email = document.getElementById('registerEmail').value.trim();
+  const pass = document.getElementById('registerPass').value;
+
+  if (!name || !email || !pass) {
+    showAuthError('Completá todos los campos');
+    return;
+  }
+
+  if (pass.length < 6) {
+    showAuthError('La contraseña debe tener al menos 6 caracteres');
+    return;
+  }
+
+  try {
+    const cred = await window.auth.createUserWithEmailAndPassword(email, pass);
+    await cred.user.updateProfile({ displayName: name });
+    closeAuthModal();
+  } catch (error) {
+    if (error.code === 'auth/email-already-in-use') {
+      showAuthError('Ya existe una cuenta con este email');
+    } else {
+      showAuthError('Error: ' + error.message);
+    }
+  }
+};
+
+window.logout = async () => {
+  try {
+    await window.auth.signOut();
+  } catch (error) {
+    console.error('Error al cerrar sesión:', error);
+  }
 };

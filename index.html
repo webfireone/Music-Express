@@ -14,12 +14,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  <link rel="stylesheet" href="assets/css/styles.css?v=11" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=12" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎵</text></svg>" />
 
   <script src="https://www.gstatic.com/firebasejs/11.10.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.10.0/firebase-auth-compat.js"></script>
 </head>
 <body>
 
@@ -542,10 +543,63 @@
     </div>
   </div>
 
+  <!-- AUTH MODAL -->
+  <div class="auth-modal" id="authModal">
+    <div class="auth-modal-backdrop" onclick="closeAuthModal()"></div>
+    <div class="auth-modal-box">
+      <button class="auth-close" onclick="closeAuthModal()"><i class="fas fa-times"></i></button>
+      
+      <!-- Login Form -->
+      <div id="authLogin">
+        <div class="auth-icon"><i class="fas fa-user-circle"></i></div>
+        <h3>Iniciar sesión</h3>
+        <p>Ingresá para hacer tu pedido</p>
+        
+        <button class="btn btn-google" onclick="loginWithGoogle()">
+          <i class="fab fa-google"></i> Continuar con Google
+        </button>
+        
+        <div class="auth-divider"><span>o</span></div>
+        
+        <input type="email" id="loginEmail" placeholder="Email" />
+        <input type="password" id="loginPass" placeholder="Contraseña" />
+        <button class="btn btn-primary" onclick="loginWithEmail()">
+          <i class="fas fa-sign-in-alt"></i> Iniciar sesión
+        </button>
+        
+        <p class="auth-switch">¿No tenés cuenta? <a href="#" onclick="showAuthRegister()">Crear cuenta</a></p>
+      </div>
+      
+      <!-- Register Form -->
+      <div id="authRegister" style="display:none;">
+        <div class="auth-icon"><i class="fas fa-user-plus"></i></div>
+        <h3>Crear cuenta</h3>
+        <p>Registrate para hacer tu pedido</p>
+        
+        <button class="btn btn-google" onclick="loginWithGoogle()">
+          <i class="fab fa-google"></i> Continuar con Google
+        </button>
+        
+        <div class="auth-divider"><span>o</span></div>
+        
+        <input type="text" id="registerName" placeholder="Tu nombre" />
+        <input type="email" id="registerEmail" placeholder="Email" />
+        <input type="password" id="registerPass" placeholder="Contraseña" />
+        <button class="btn btn-primary" onclick="registerWithEmail()">
+          <i class="fas fa-user-plus"></i> Crear cuenta
+        </button>
+        
+        <p class="auth-switch">¿Ya tenés cuenta? <a href="#" onclick="showAuthLogin()">Iniciar sesión</a></p>
+      </div>
+      
+      <div id="authError" class="auth-error" style="display:none;"></div>
+    </div>
+  </div>
+
   <!-- ADMIN BADGE (floating) -->
   <div class="admin-badge-container" id="adminBadgeContainer"></div>
 
   <script src="assets/js/firebase-config.js"></script>
-  <script src="assets/js/main.js?v=10"></script>
+  <script src="assets/js/main.js?v=11"></script>
 </body>
 </html>
