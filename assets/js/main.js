@@ -836,32 +836,17 @@ function initAuth() {
 
 function updateAuthUI() {
   const navbar = document.querySelector('.nav-links');
-  if (!navbar) return;
+  const loginBtn = document.getElementById('navLoginBtn');
+  if (!navbar || !loginBtn) return;
 
-  let authHTML = '';
-  
   if (currentUser) {
-    authHTML = `
-      <li class="nav-user" style="margin-left:12px;display:flex;align-items:center;gap:8px;">
-        <img src="${currentUser.photoURL || 'https://www.gravatar.com/avatar?d=mp'}" style="width:32px;height:32px;border-radius:50%;" />
-        <span style="font-size:0.85rem;">${currentUser.displayName || currentUser.email}</span>
-        <button class="btn btn-sm" style="padding:4px 8px;font-size:0.75rem;" onclick="logout()">Salir</button>
-      </li>
-    `;
+    loginBtn.classList.add('logged-in');
+    loginBtn.innerHTML = `<i class="fas fa-check-circle"></i> ${currentUser.displayName?.split(' ')[0] || 'OK'}`;
+    loginBtn.onclick = () => logout();
   } else {
-    authHTML = `
-      <li><a href="#" onclick="openAuthModal();return false;" class="btn btn-primary btn-sm" style="text-decoration:none;color:#0a0a0a;margin-left:12px;"><i class="fas fa-user"></i> Iniciar sesión</a></li>
-    `;
-  }
-
-  const existingUser = navbar.querySelector('.nav-user');
-  const existingBtn = navbar.querySelector('.nav-login-btn');
-  if (existingUser) existingUser.remove();
-  if (existingBtn) existingBtn.remove();
-  
-  const cartLi = navbar.querySelector('.nav-cart')?.closest('li');
-  if (cartLi) {
-    cartLi.insertAdjacentHTML('afterend', authHTML);
+    loginBtn.classList.remove('logged-in');
+    loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> LOGIN';
+    loginBtn.onclick = () => openAuthModal();
   }
 }
 

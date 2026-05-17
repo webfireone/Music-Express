@@ -395,6 +395,71 @@ body {
   display: none;
   align-items: center;
   justify-content: center;
+}
+
+/* ---------- Login Button ---------- */
+.nav-login {
+  background: #dc2626 !important;
+  color: #fff !important;
+  border: none !important;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.nav-login:hover {
+  background: #b91c1c !important;
+  transform: translateY(-1px);
+}
+
+.nav-login.logged-in {
+  background: #16a34a !important;
+}
+
+.nav-login.logged-in:hover {
+  background: #15803d !important;
+}
+
+.nav-login.logged-in i {
+  margin-right: 6px;
+}
+
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-user img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.nav-user .user-name {
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-user .btn-logout {
+  background: #dc2626;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.nav-user .btn-logout:hover {
+  background: #b91c1c;
+}
   transition: transform 0.3s ease;
 }
 

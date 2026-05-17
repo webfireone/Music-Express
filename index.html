@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  <link rel="stylesheet" href="assets/css/styles.css?v=12" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=13" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎵</text></svg>" />
 
   <script src="https://www.gstatic.com/firebasejs/11.10.0/firebase-app-compat.js"></script>
@@ -73,13 +73,9 @@
         <li><a href="#" onclick="navigateTo('servicios');return false;">Servicios</a></li>
         <li><a href="#" onclick="navigateTo('tienda');return false;">Catálogo</a></li>
         <li><a href="#" onclick="navigateTo('ejemplos');return false;">Ejemplos</a></li>
-        <li>
-          <button class="nav-cart" onclick="toggleCart()" aria-label="Carrito">
-            <i class="fas fa-shopping-cart"></i>
-            <span class="cart-badge" id="cartBadge">0</span>
-          </button>
-        </li>
-        <li><a href="#" onclick="navigateTo('pedido');return false;" class="btn btn-primary btn-sm" style="text-decoration:none;color:#0a0a0a;"><i class="fas fa-music"></i> Pedir tema</a></li>
+        <li><a href="#" onclick="navigateTo('pedido');return false;" class="btn btn-primary btn-sm nav-pedir"><i class="fas fa-music"></i> Pedir tema</a></li>
+        <li><button class="nav-cart" onclick="toggleCart()" aria-label="Carrito"><i class="fas fa-shopping-cart"></i><span class="cart-badge" id="cartBadge">0</span></button></li>
+        <li><a href="#" onclick="openAuthModal();return false;" class="btn btn-sm nav-login" id="navLoginBtn"><i class="fas fa-sign-in-alt"></i> LOGIN</a></li>
       </ul>
       <div style="display:flex;align-items:center;gap:12px;">
         <button class="nav-cart" onclick="toggleCart()" aria-label="Carrito" style="display:none;" class="nav-cart-mobile">
@@ -600,6 +596,6 @@
   <div class="admin-badge-container" id="adminBadgeContainer"></div>
 
   <script src="assets/js/firebase-config.js"></script>
-  <script src="assets/js/main.js?v=11"></script>
+  <script src="assets/js/main.js?v=12"></script>
 </body>
 </html>
