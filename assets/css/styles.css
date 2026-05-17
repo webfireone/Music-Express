@@ -460,7 +460,14 @@ body {
 .nav-user .btn-logout:hover {
   background: #b91c1c;
 }
-  transition: transform 0.3s ease;
+
+/* ---------- Pedir Tema Button ---------- */
+.nav-pedir {
+  color: #000 !important;
+}
+
+.nav-pedir:hover {
+  color: #000 !important;
 }
 
 /* ---------- MOBILE MENU ---------- */

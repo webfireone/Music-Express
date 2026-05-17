@@ -841,7 +841,8 @@ function updateAuthUI() {
 
   if (currentUser) {
     loginBtn.classList.add('logged-in');
-    loginBtn.innerHTML = `<i class="fas fa-check-circle"></i> ${currentUser.displayName?.split(' ')[0] || 'OK'}`;
+    const displayName = currentUser.displayName || currentUser.email?.split('@')[0] || 'Usuario';
+    loginBtn.innerHTML = `<i class="fas fa-check-circle"></i> ${displayName}`;
     loginBtn.onclick = () => logout();
   } else {
     loginBtn.classList.remove('logged-in');
